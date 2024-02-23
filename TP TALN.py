@@ -22,7 +22,6 @@ class ArabicTextProcessor:
 
         all_files = [f for f in os.listdir(self.folder_path) if f.endswith('.txt')]
         selected_files = random.sample(all_files, min(len(all_files), self.number_of_files))
-        print(len(selected_files))
         for file_name in selected_files:
             file_path = os.path.join(self.folder_path, file_name)
             with open(file_path, 'r', encoding='utf-8') as file:
@@ -71,16 +70,17 @@ class ArabicTextProcessor:
         self.combine_all_text_files()
         self.read_sw_file()
         self.distinct_words = self.get_words(self.combined_content)
-        print(len(self.distinct_words))
+        print("Before processing : ",len(self.distinct_words))
         self.stop_words = self.get_words(self.sw_content,"\n")
         self.get_rid_sw()
         self.distinct_words = self.filter_words()
         self.filter_space()
         self.distinct_words = [get_display(reshape(word)) for word in self.distinct_words]
         print(self.distinct_words)
-        print(len(self.distinct_words))
+        print("After processing : ",len(self.distinct_words))
 
 SW_Path = "C:/Users/meriem/Documents/vs/tp_m1/nlp/arabic_text_analyser_nlp/list.txt"
+
 folder_path = os.path.join(os.path.dirname(__file__), 'Sports')
 number_of_files = 1
 test = ArabicTextProcessor(folder_path, SW_Path,number_of_files)
