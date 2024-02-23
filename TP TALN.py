@@ -41,12 +41,13 @@ class ArabicTextProcessor:
     
     def get_words(self,content,separation = " "):
         '''a function for splitting files to list'''
-        return self.combined_content.split(separation)
+        return content.split(separation)
 
     def get_rid_sw(self):
         '''a function delete stop words'''
         for word in self.distinct_words : 
             if word in self.stop_words :
+                
                 self.distinct_words.remove(word)
 
     def get_remove_number(self):
@@ -64,11 +65,12 @@ class ArabicTextProcessor:
         self.stop_words = self.get_words(self.sw_content,"\n")
         self.get_remove_number()
         self.get_rid_sw()
+
         self.distinct_words = [get_display(reshape(word)) for word in self.distinct_words]
 
 SW_Path = "C:/Users/meriem/Documents/vs/tp_m1/nlp/arabic_text_analyser_nlp/list.txt"
 folder_path = os.path.join(os.path.dirname(__file__), 'Sports')
-number_of_files = 2
+number_of_files = 1
 test = ArabicTextProcessor(folder_path, SW_Path,number_of_files)
 test.processing()
 print(test.distinct_words)
