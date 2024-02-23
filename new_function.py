@@ -23,5 +23,29 @@ def combine_all_text_files(folder_path, number_of_files):
 # Example usage
 folder_path = os.path.join(os.path.dirname(__file__), 'archive', 'Sports')
 number_of_files = 6000
-combined_content = combine_all_text_files(folder_path, number_of_files)
+# combined_content = combine_all_text_files(folder_path, number_of_files)
+
+
+def filter_words(distinct_words, not_wanted):
+    """
+    Remove characters in 'not_wanted' from each word in 'distinct_words'.
+    
+    :param distinct_words: List of words to be filtered.
+    :param not_wanted: List of characters to remove from words in distinct_words.
+    :return: A list of filtered words with not_wanted characters removed.
+    """
+    # Filter each word in distinct_words
+    filtered_words = []
+    for word in distinct_words:
+        # Remove not_wanted characters from the current word
+        filtered_word = ''.join([char for char in word if char not in not_wanted])
+        filtered_words.append(filtered_word)
+    
+    return filtered_words
+
+# Example usage
+distinct_words = ['hello.)3', 'world', 'example']
+not_wanted = ['،', '.', '(', ')', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+filtered_words = filter_words(distinct_words, not_wanted)
+print(filtered_words)
 
