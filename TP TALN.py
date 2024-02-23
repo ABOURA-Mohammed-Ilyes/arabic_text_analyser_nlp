@@ -17,18 +17,15 @@ class ArabicTextProcessor:
 
 
     def combine_all_text_files(self):
-    # Get all file names in the folder
+        '''a function that will combine all files randomly'''
 
         all_files = [f for f in os.listdir(self.folder_path) if f.endswith('.txt')]
-        # Randomly select the specified number of text files
         selected_files = random.sample(all_files, min(len(all_files), self.number_of_files))
         print(len(selected_files))
-        # Loop through each selected file, read its content, and append to the combined_content variable
         for file_name in selected_files:
             file_path = os.path.join(self.folder_path, file_name)
             with open(file_path, 'r', encoding='utf-8') as file:
                 content = file.read()
-                # Append the file content to the combined_content variable, separated by a space
                 self.combined_content += content + " "
 
 
