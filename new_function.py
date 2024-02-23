@@ -45,7 +45,7 @@ def filter_words(distinct_words, not_wanted):
     return filtered_words
 
 # Example usage
-distinct_words = ['hello.)3', 'world', 'example']
+distinct_words = ['hello.)3', 'world', 'example','(30)']
 not_wanted = ['،', '.', '(', ')', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 filtered_words = filter_words(distinct_words, not_wanted)
 print(filtered_words)

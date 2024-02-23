@@ -14,6 +14,7 @@ class ArabicTextProcessor:
         self.sw_content = ""
         self.distinct_words = []
         self.stop_words = []
+        
 
 
     def combine_all_text_files(self):
@@ -45,33 +46,42 @@ class ArabicTextProcessor:
 
     def get_rid_sw(self):
         '''a function delete stop words'''
-        for word in self.distinct_words : 
-            if word in self.stop_words :
-                
-                self.distinct_words.remove(word)
+        self.distinct_words = [word for word in self.distinct_words if word not in self.stop_words]
 
-    def get_remove_number(self):
-        for word in self.distinct_words : 
-            if word.isdigit() :
-                self.distinct_words.remove(word) 
-
-    def get_remove_parantheces(self):
-        pass
-
+    def filter_words(self):
+        """
+        Remove characters in 'not_wanted' from each word in 'distinct_words'.
+        
+        :param distinct_words: List of words to be filtered.
+        :param not_wanted: List of characters to remove from words in distinct_words.
+        :return: A list of filtered words with not_wanted characters removed.
+        """
+        filtered_words = []
+        for word in self.distinct_words:
+            # Remove not_wanted characters from the current word
+            filtered_word = ''.join([char for char in word if char.isalpha()])
+            filtered_words.append(filtered_word)
+        
+        return filtered_words
+    
+    def filter_space(self):
+        self.distinct_words = [word for word in self.distinct_words if word != '']
+                    
     def processing(self):
         self.combine_all_text_files()
         self.read_sw_file()
         self.distinct_words = self.get_words(self.combined_content)
+        print(len(self.distinct_words))
         self.stop_words = self.get_words(self.sw_content,"\n")
-        self.get_remove_number()
         self.get_rid_sw()
-
+        self.distinct_words = self.filter_words()
+        self.filter_space()
         self.distinct_words = [get_display(reshape(word)) for word in self.distinct_words]
+        print(self.distinct_words)
+        print(len(self.distinct_words))
 
 SW_Path = "C:/Users/meriem/Documents/vs/tp_m1/nlp/arabic_text_analyser_nlp/list.txt"
 folder_path = os.path.join(os.path.dirname(__file__), 'Sports')
 number_of_files = 1
 test = ArabicTextProcessor(folder_path, SW_Path,number_of_files)
 test.processing()
-print(test.distinct_words)
-print(len(test.distinct_words))
