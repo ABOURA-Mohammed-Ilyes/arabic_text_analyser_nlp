@@ -3,6 +3,7 @@ import random
 
 def combine_all_text_files(folder_path, number_of_files):
     # Get all file names in the folder
+
     all_files = [f for f in os.listdir(folder_path) if f.endswith('.txt')]
     # Randomly select the specified number of text files
     selected_files = random.sample(all_files, min(len(all_files), number_of_files))
@@ -21,7 +22,7 @@ def combine_all_text_files(folder_path, number_of_files):
     return combined_content
 
 # Example usage
-folder_path = os.path.join(os.path.dirname(__file__), 'archive', 'Sports')
+folder_path = os.path.join(os.path.dirname(__file__), 'Sports')
 number_of_files = 6000
 # combined_content = combine_all_text_files(folder_path, number_of_files)
 
