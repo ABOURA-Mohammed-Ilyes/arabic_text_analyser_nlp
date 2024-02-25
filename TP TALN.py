@@ -2,6 +2,7 @@ from arabic_reshaper import reshape
 from bidi.algorithm import get_display
 import os
 import random
+from collections import Counter
 
 #first inqtall pip install arabic-reshaper ,pip install python-bidi
 
@@ -12,11 +13,12 @@ class ArabicTextProcessor:
         self.number_of_files = number_of_files
         self.combined_content = ""
         self.sw_content = ""
-        self.distinct_words = []
+        self.file_words = []
+        self.distinct_words = {}
         self.stop_words = []
         
 
-
+    #begin file precesiing
     def combine_all_text_files(self):
         '''a function that will combine all files randomly'''
 
@@ -28,7 +30,6 @@ class ArabicTextProcessor:
                 content = file.read()
                 self.combined_content += content + " "
 
-
     def read_sw_file(self):
         try:
             with open(self.SW_Path, 'r', encoding='utf-8') as file:
@@ -39,49 +40,101 @@ class ArabicTextProcessor:
             print("An error occurred: ", e)
 
     
-    def get_words(self,content,separation = " "):
+    def get_text_to_list(self,content,separation = " "):
         '''a function for splitting files to list'''
         return content.split(separation)
+    
+    #end file precesiing
 
-    def get_rid_sw(self):
+    #begin filters 
+
+    def filter_sw(self):
         '''a function delete stop words'''
-        self.distinct_words = [word for word in self.distinct_words if word not in self.stop_words]
+        self.distinct_words = {word: {} for word in self.distinct_words if word not in self.stop_words}
+        self.file_words = [word for word in self.file_words if word not in self.stop_words]
 
-    def filter_words(self):
+    def filter_not_alpha_characters(self,content,bool=True):
         """
-        Remove characters in 'not_wanted' from each word in 'distinct_words'.
-        
-        :param distinct_words: List of words to be filtered.
-        :param not_wanted: List of characters to remove from words in distinct_words.
-        :return: A list of filtered words with not_wanted characters removed.
+        a function for Removing characters not alpha from each word in 'distinct_words'.
         """
-        filtered_words = []
-        for word in self.distinct_words:
-            # Remove not_wanted characters from the current word
+        if bool :
+            filtered_words = {}
+        else :
+            filtered_words = []
+
+        for word in content:
+            # remove noalpha characters from the cvrrent word
             filtered_word = ''.join([char for char in word if char.isalpha()])
-            filtered_words.append(filtered_word)
-        
+            if bool:
+                filtered_words[filtered_word] = {}
+            else :
+                filtered_words.append(filtered_word)
+
         return filtered_words
     
     def filter_space(self):
-        self.distinct_words = [word for word in self.distinct_words if word != '']
-                    
+        self.distinct_words = {word: {} for word in self.distinct_words if word != ''}
+        self.file_words = [word for word in self.file_words if word != '']
+
+    #end filters  
+
+    #begin next words processing       
+
+    def process_next_words(self):
+        '''a function that find next wrds for every distinct words'''
+        words = self.file_words
+        for i in range(len(words)):
+            if i < len(words) - 1:
+                next_cle = words[i + 1]
+                if next_cle in self.distinct_words[words[i]]:
+                    self.distinct_words[words[i]][next_cle] += 1
+                else:
+                    self.distinct_words[words[i]][next_cle] = 1
+
+        for word, next_words in self.distinct_words.items():
+            sorted_next_words = sorted(next_words.items(), key=lambda x: x[1], reverse=True)
+            top_5_next_words = sorted_next_words[:5]
+            self.distinct_words[word] = dict(top_5_next_words)            
+
+
+    #end next words processing 
+                                   
     def processing(self):
+        '''function that process our model'''
+        #read files
         self.combine_all_text_files()
         self.read_sw_file()
-        self.distinct_words = self.get_words(self.combined_content)
+        # make them a list
+        self.distinct_words = self.get_text_to_list(self.combined_content)
+        self.file_words = self.get_text_to_list(self.combined_content)
+        self.stop_words = self.get_text_to_list(self.sw_content,"\n")
+
         print("Before processing : ",len(self.distinct_words))
-        self.stop_words = self.get_words(self.sw_content,"\n")
-        self.get_rid_sw()
-        self.distinct_words = self.filter_words()
+        #functions for filters 
+        self.filter_sw()
+        self.distinct_words = self.filter_not_alpha_characters(self.distinct_words)
+        self.file_words = self.filter_not_alpha_characters(self.file_words,False)
         self.filter_space()
-        self.distinct_words = [get_display(reshape(word)) for word in self.distinct_words]
-        print(self.distinct_words)
+        #next word processing
+        self.process_next_words()
+
+        # mirror the arabic words
+        self.distinct_words = {
+            get_display(reshape(word)): {
+                get_display(reshape(w)): v for w, v in value.items()
+            } for word, value in self.distinct_words.items()
+        }
+
+        #print result 
+        print("the matrixe : ",self.distinct_words)
         print("After processing : ",len(self.distinct_words))
 
-SW_Path = "C:/Users/meriem/Documents/vs/tp_m1/nlp/arabic_text_analyser_nlp/list.txt"
 
+SW_Path = "C:/Users/meriem/Documents/vs/tp_m1/nlp/arabic_text_analyser_nlp/list.txt"
 folder_path = os.path.join(os.path.dirname(__file__), 'Sports')
-number_of_files = 1
+number_of_files = 5
 test = ArabicTextProcessor(folder_path, SW_Path,number_of_files)
 test.processing()
+
+
+
