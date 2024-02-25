@@ -91,6 +91,8 @@ class ArabicTextProcessor:
                     self.distinct_words[words[i]][next_cle] = 1
 
         for word, next_words in self.distinct_words.items():
+           
+            # x[1] is he value
             sorted_next_words = sorted(next_words.items(), key=lambda x: x[1], reverse=True)
             top_5_next_words = sorted_next_words[:5]
             self.distinct_words[word] = dict(top_5_next_words)            
@@ -131,7 +133,7 @@ class ArabicTextProcessor:
 
 SW_Path = "C:/Users/meriem/Documents/vs/tp_m1/nlp/arabic_text_analyser_nlp/arabic_sw.txt"
 folder_path = os.path.join(os.path.dirname(__file__), 'Sports')
-number_of_files = 5
+number_of_files = 1
 test = ArabicTextProcessor(folder_path, SW_Path,number_of_files)
 test.processing()
 
