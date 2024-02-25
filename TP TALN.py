@@ -2,7 +2,6 @@ from arabic_reshaper import reshape
 from bidi.algorithm import get_display
 import os
 import random
-from collections import Counter
 
 #first inqtall pip install arabic-reshaper ,pip install python-bidi
 
@@ -108,7 +107,7 @@ class ArabicTextProcessor:
         self.distinct_words = self.get_text_to_list(self.combined_content)
         self.file_words = self.get_text_to_list(self.combined_content)
         self.stop_words = self.get_text_to_list(self.sw_content,"\n")
-
+        print(len(self.stop_words))
         print("Before processing : ",len(self.distinct_words))
         #functions for filters 
         self.filter_sw()
@@ -130,7 +129,7 @@ class ArabicTextProcessor:
         print("After processing : ",len(self.distinct_words))
 
 
-SW_Path = "C:/Users/meriem/Documents/vs/tp_m1/nlp/arabic_text_analyser_nlp/list.txt"
+SW_Path = "C:/Users/meriem/Documents/vs/tp_m1/nlp/arabic_text_analyser_nlp/arabic_sw.txt"
 folder_path = os.path.join(os.path.dirname(__file__), 'Sports')
 number_of_files = 5
 test = ArabicTextProcessor(folder_path, SW_Path,number_of_files)

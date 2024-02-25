@@ -1,5 +1,9 @@
 import os
 import random
+from nltk.corpus import stopwords
+import nltk
+
+
 
 def combine_all_text_files(folder_path, number_of_files):
     # Get all file names in the folder
@@ -44,6 +48,32 @@ def filter_words(distinct_words, not_wanted):
     
     return filtered_words
 
+def merge_files(file_paths, output_path):
+    unique_elements = set()
+
+    # Parcourir chaque fichier
+    for file_path in file_paths:
+        with open(file_path, 'r', encoding='utf-8') as file:
+            # Lire chaque ligne du fichier et ajouter les éléments uniques à l'ensemble
+            for line in file:
+                element = line.strip()
+                if element not in unique_elements:
+                    unique_elements.add(element)
+
+    # Écrire les éléments uniques dans le fichier de sortie
+    with open(output_path, 'w', encoding='utf-8') as output_file:
+        for element in unique_elements:
+            output_file.write(element + '\n')
+
+# Exemple d'utilisation
+file_paths = ['arabic_stop_words.txt', 'arabicST.txt', 'list.txt']
+output_path = 'arabic_sw.txt'
+nltk.download('stopwords')
+stop_words_arabic = stopwords.words('arabic')
+# Afficher les premiers mots vides en arabe
+print(len(stop_words_arabic))
+
+    
 
 # Example usage
 distinct_words = ['hello.)3', 'world', 'example','(30)']
