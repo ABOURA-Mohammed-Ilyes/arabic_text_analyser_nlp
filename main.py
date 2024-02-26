@@ -1,5 +1,8 @@
 from generateArabicWord import ArabicTextProcessor
+from interface import Interface
 import os
+import tkinter as tk
+from tkinter import messagebox
 
 """ SW_Path = os.path.join(os.path.dirname(__file__), 'arabic_sw.txt')
 folder_path = os.path.join(os.path.dirname(__file__), 'Sports')
@@ -10,12 +13,10 @@ test.processing() """
 
 import json
 
-# Ouvrir le fichier JSON en mode lecture
 json_path = os.path.join(os.path.dirname(__file__), 'data_train.json')
 with open(json_path, "r", encoding='utf-8') as j:
-    # Charger le contenu JSON en tant que dictionnaire
     data = json.load(j)
 
-value = "جولبيس"
-# Maintenant, 'data' est un dictionnaire contenant le contenu du fichier JSON
-print(data[value])
+
+interface = Interface(data)
+interface.show_interface()
