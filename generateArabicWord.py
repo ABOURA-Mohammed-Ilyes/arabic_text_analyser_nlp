@@ -1,7 +1,8 @@
-from arabic_reshaper import reshape
-from bidi.algorithm import get_display
+# from arabic_reshaper import reshape
+# from bidi.algorithm import get_display
 import os
 import random
+import json
 
 #first inqtall pip install arabic-reshaper ,pip install python-bidi
 
@@ -63,7 +64,7 @@ class ArabicTextProcessor:
 
         for word in content:
             # remove noalpha characters from the cvrrent word
-            filtered_word = ''.join([char for char in word if char.isalpha()])
+            filtered_word = ''.join([char for char in word if char.isalpha() and char != '_'])
             if bool:
                 filtered_words[filtered_word] = {}
             else :
@@ -120,22 +121,18 @@ class ArabicTextProcessor:
         self.process_next_words()
 
         # mirror the arabic words
-        self.distinct_words = {
-            get_display(reshape(word)): {
-                get_display(reshape(w)): v for w, v in value.items()
-            } for word, value in self.distinct_words.items()
-        }
+        #self.distinct_words = {
+        #     get_display(reshape(word)): {
+        #         get_display(reshape(w)): v for w, v in value.items()
+        #     } for word, value in self.distinct_words.items()
+        # }
 
         #print result 
         print("the matrixe : ",self.distinct_words)
+        # json_data = json.dumps(self.distinct_words)
+        # with open("data_train.json","w",encoding='utf-8') as j:
+        #     json.dump(self.distinct_words,j,ensure_ascii=False) 
+
         print("After processing : ",len(self.distinct_words))
-
-
-SW_Path = "C:/Users/meriem/Documents/vs/tp_m1/nlp/arabic_text_analyser_nlp/arabic_sw.txt"
-folder_path = os.path.join(os.path.dirname(__file__), 'Sports')
-number_of_files = 1
-test = ArabicTextProcessor(folder_path, SW_Path,number_of_files)
-test.processing()
-
 
 
