@@ -6,15 +6,17 @@ class Interface():
         self.data = data
         self.root = tk.Tk()
         self.style = ttk.Style()
-        self.centered_frame = ttk.Frame(self.root)
-        self.centered_frame.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
         self.configure_gui()
 
     def configure_gui(self):
+        self.root.configure(background='#222831')
+        self.style.configure('Frame1.TFrame', background='#222831')
+        self.centered_frame = ttk.Frame(self.root,style='Frame1.TFrame')
+        self.centered_frame.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
         self.root.title("Generate Arabic Word")
         self.root.geometry("1000x800") 
 
-        self.style.configure('My.TLabel', font=('Helvetica', 12,'bold'), padding=20, foreground="black")
+        self.style.configure('My.TLabel', font=('Helvetica', 12,'bold'), padding=20, background='#222831', foreground="white")
 
         self.label = ttk.Label(self.centered_frame, text="Enter a word :", style='My.TLabel')
 
