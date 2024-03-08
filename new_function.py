@@ -3,11 +3,25 @@ from farasa.stemmer import FarasaStemmer
 from farasa.ner import FarasaNamedEntityRecognizer
 import os
 import json
+import qalsadi.lemmatizer 
+import re
+
 
 
 json_path = os.path.join(os.path.dirname(__file__), 'data_train.json')
 with open(json_path, "r", encoding='utf-8') as j:
     data = json.load(j)
+
+
+
+def filter_no_arabic(content):
+    # Expression régulière pour les caractères arabes
+    arabic_pattern = re.compile(r'[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF]+')
+
+
+    mots_arabes = [word for word,v in content.items() if arabic_pattern.fullmatch(word)]
+
+    return mots_arabes
 
 def dict_test(content):
     
@@ -38,33 +52,53 @@ def stem_word(content):
     stemmer_interactive = FarasaStemmer(interactive=True)
     stemmed_words_unknown = []
 
-    for word, k in content.items():
+    for word in content:
         stemmed_word = stemmer_interactive.stem(word)
         if stemmed_word == word:
             stemmed_words_unknown.append(word)
+    stemmer_interactive.terminate()    
     return stemmed_words_unknown
 
+def type_word(content):
+    lemmer = qalsadi.lemmatizer.Lemmatizer()
+    lemmas = [lemmer.lemmatize(i, return_pos=True) for i in content ] 
+    words_with_all = []
 
-def ner_word(content):
-    named_entity_recognizer_interactive = FarasaNamedEntityRecognizer(interactive=True)
-    ner_words_unknown = []
+    for word, pos in lemmas:
+        if pos == 'all':
+            words_with_all.append(word)
 
-    for word in content:
-        print(word)
-        ner_word = named_entity_recognizer_interactive.recognize(word)
-        if "O" in ner_word:
-            ner_words_unknown.append(word)
-    return ner_words_unknown
+    return words_with_all        
+
+
+
+# def ner_word(content):
+#     named_entity_recognizer_interactive = FarasaNamedEntityRecognizer(interactive=True)
+#     ner_words_unknown = []
+
+#     for word in content:
+#         print(word)
+#         ner_word = named_entity_recognizer_interactive.recognize(word)
+#         if "O" in ner_word:
+#             ner_words_unknown.append(word)
+#     named_entity_recognizer_interactive.terminate()    
+#     return ner_words_unknown
 
            
 
+# Supprimer les mots qui ne sont pas en arabe
+data = supprimer_non_arabes(data) 
 stemmed_words_unknown = stem_word(data)
 unknown_words = dict_test(stemmed_words_unknown)
+words_with_all = type_word(unknown_words)
 # ner_words_unknown = ner_word(unknown_words)
 # print(ner_words_unknown)
-print(unknown_words)
+print(words_with_all)
 print(len(stemmed_words_unknown))
 print(len(unknown_words))
+print(len(words_with_all))
 
 # print(len(ner_words_unknown))
-            
+
+with open("unknown_words.json","w",encoding='utf-8') as j:
+    json.dump(unknown_words,j,ensure_ascii=False)            
