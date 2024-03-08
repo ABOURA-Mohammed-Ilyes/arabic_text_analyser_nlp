@@ -53,11 +53,11 @@ class ArabicTextProcessor:
         self.distinct_words = {word: {} for word in self.distinct_words if word not in self.stop_words}
         self.file_words = [word for word in self.file_words if word not in self.stop_words]
 
-    def filter_not_alpha_characters(self,content,bool=True):
+    def filter_not_alpha_characters(self,content,dictionnary=True):
         """
         a function for Removing characters not alpha from each word in 'distinct_words'.
         """
-        if bool :
+        if dictionnary :
             filtered_words = {}
         else :
             filtered_words = []
@@ -65,14 +65,14 @@ class ArabicTextProcessor:
         for word in content:
             # remove noalpha characters from the cvrrent word
             filtered_word = ''.join([char for char in word if char.isalpha() and char != '_'])
-            if bool:
+            if dictionnary:
                 filtered_words[filtered_word] = {}
             else :
                 filtered_words.append(filtered_word)
 
         return filtered_words
     
-    def filter_space(self):
+    def filter_void(self):
         self.distinct_words = {word: {} for word in self.distinct_words if word != ''}
         self.file_words = [word for word in self.file_words if word != '']
 
@@ -95,7 +95,7 @@ class ArabicTextProcessor:
            
             # x[1] is he value
             sorted_next_words = sorted(next_words.items(), key=lambda x: x[1], reverse=True)
-            top_5_next_words = sorted_next_words[:5]
+            top_5_next_words = sorted_next_words[:3]
             self.distinct_words[word] = dict(top_5_next_words)            
 
 
@@ -113,10 +113,10 @@ class ArabicTextProcessor:
         print(len(self.stop_words))
         print("Before processing : ",len(self.distinct_words))
         #functions for filters 
-        self.filter_sw()
         self.distinct_words = self.filter_not_alpha_characters(self.distinct_words)
         self.file_words = self.filter_not_alpha_characters(self.file_words,False)
-        self.filter_space()
+        self.filter_sw()
+        self.filter_void()
         #next word processing
         self.process_next_words()
 
@@ -128,10 +128,10 @@ class ArabicTextProcessor:
         # }
 
         #print result 
-        print("the matrixe : ",self.distinct_words)
-        # json_data = json.dumps(self.distinct_words)
-        # with open("data_train.json","w",encoding='utf-8') as j:
-        #     json.dump(self.distinct_words,j,ensure_ascii=False) 
+        #print("the matrixe : ",self.distinct_words)
+
+        with open("data_train.json","w",encoding='utf-8') as j:
+            json.dump(self.distinct_words,j,ensure_ascii=False) 
 
         print("After processing : ",len(self.distinct_words))
 

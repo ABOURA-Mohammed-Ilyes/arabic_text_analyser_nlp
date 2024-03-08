@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+import random
 
 class Interface():
     def __init__(self, data):
@@ -51,8 +52,8 @@ class Interface():
         if word in self.data:
             values = self.data[word]
             self.text.delete("1.0", tk.END)  
-            for key, value in values.items():
-                self.text.insert(tk.END, f"{key}\t")  
+            random_key = random.choice(list(values.keys()))
+            self.text.insert(tk.END, f"{random_key}\t")  
         else:
             self.text.delete("1.0", tk.END)
             self.text.insert(tk.END, "Aucune valeur trouvée pour ce mot.\n")  
