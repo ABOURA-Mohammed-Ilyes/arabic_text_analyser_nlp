@@ -18,16 +18,19 @@ class Interface():
         self.root.geometry("1000x800") 
 
         self.style.configure('My.TLabel', font=('Helvetica', 12,'bold'), padding=20, background='#222831', foreground="white")
+        self.style.configure('My.TEntry', padding=10)
 
-        self.label = ttk.Label(self.centered_frame, text="Enter a word :", style='My.TLabel')
+        self.label_word = ttk.Label(self.centered_frame, text="Enter a word :", style='My.TLabel')
+        self.label_word.pack()
 
+        self.entry_word = ttk.Entry(self.centered_frame, style='My.TEntry')
+        self.entry_word.pack(ipadx=100)
 
-        self.label.pack()
+        self.label_num = ttk.Label(self.centered_frame, text="Enter the number of iterations (N):", style='My.TLabel')
+        self.label_num.pack()
 
-        self.style.configure('My.TEntry', padding=(20, 10))
-
-        self.entry = ttk.Entry(self.centered_frame, style='My.TEntry')
-        self.entry.pack(ipadx=100)
+        self.entry_num = ttk.Entry(self.centered_frame, style='My.TEntry')
+        self.entry_num.pack(ipadx=100)
 
         self.style.configure('My.TButton', font=('Helvetica', 12),
                              padding=(10, 5), borderwidth=2, relief='groove',
@@ -44,23 +47,28 @@ class Interface():
         self.clear_button = ttk.Button(self.centered_frame, text="Clear", command=self.clear_text, style='My.TButton')
         self.clear_button.pack(padx=20, pady=10)
 
-        self.text = tk.Text(self.centered_frame, width=50, height=10, wrap=tk.WORD)
-        self.text.pack(pady=10)
+        self.label_output = ttk.Label(self.centered_frame, text="", style='My.TLabel', anchor='w', font=('Helvetica', 15))
+        self.label_output.pack(padx=20,pady=5)
 
     def get_values(self):
-        word = self.entry.get()
+        word = self.entry_word.get()
         if word in self.data:
-            values = self.data[word]
-            self.text.delete("1.0", tk.END)  
-            random_key = random.choice(list(values.keys()))
-            self.text.insert(tk.END, f"{random_key}\t")  
+            self.label_output.config(text="")
+            num_iterations = int(self.entry_num.get())
+            generated_text = ""
+            for _ in range(num_iterations):
+                values = self.data[word]
+                next_word = random.choice(list(values.keys()))
+                generated_text = generated_text + " " + next_word
+                word = next_word
+            self.label_output.config(text=generated_text)
         else:
-            self.text.delete("1.0", tk.END)
-            self.text.insert(tk.END, "Aucune valeur trouvée pour ce mot.\n")  
+            self.label_output.config(text="Aucune valeur trouvée pour ce mot.")
 
     def clear_text(self):
-        self.entry.delete(0, tk.END)
-        self.text.delete("1.0", tk.END)
+        self.entry_word.delete(0, tk.END)
+        self.entry_num.delete(0, tk.END)
+        self.label_output.config(text="")
 
     def show_interface(self):
         self.root.mainloop()
