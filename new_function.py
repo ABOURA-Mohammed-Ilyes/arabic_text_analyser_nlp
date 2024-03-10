@@ -87,7 +87,7 @@ def type_word(content):
            
 
 # Supprimer les mots qui ne sont pas en arabe
-data = supprimer_non_arabes(data) 
+data = filter_no_arabic(data) 
 stemmed_words_unknown = stem_word(data)
 unknown_words = dict_test(stemmed_words_unknown)
 words_with_all = type_word(unknown_words)

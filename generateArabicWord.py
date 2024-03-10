@@ -13,6 +13,8 @@ class ArabicTextProcessor:
         self.number_of_files = number_of_files
         self.combined_content = ""
         self.sw_content = ""
+        self.test_combined_content = ""
+        self.test_words = []
         self.file_words = []
         self.distinct_words = {}
         self.stop_words = []
@@ -29,6 +31,14 @@ class ArabicTextProcessor:
             with open(file_path, 'r', encoding='utf-8') as file:
                 content = file.read()
                 self.combined_content += content + " "
+
+        # Combine the remaining files
+        remaining_files = [f for f in all_files if f not in selected_files]
+        for file_name in remaining_files:
+            file_path = os.path.join(self.folder_path, file_name)
+            with open(file_path, 'r', encoding='utf-8') as file:
+                content = file.read()
+                self.test_combined_content += content + " "        
 
     def read_sw_file(self):
         try:
@@ -52,6 +62,7 @@ class ArabicTextProcessor:
         '''a function delete stop words'''
         self.distinct_words = {word: {} for word in self.distinct_words if word not in self.stop_words}
         self.file_words = [word for word in self.file_words if word not in self.stop_words]
+        self.test_words = [word for word in self.test_words if word not in self.stop_words]
 
     def filter_not_alpha_characters(self,content,dictionnary=True):
         """
@@ -75,6 +86,8 @@ class ArabicTextProcessor:
     def filter_void(self):
         self.distinct_words = {word: {} for word in self.distinct_words if word != ''}
         self.file_words = [word for word in self.file_words if word != '']
+        self.test_words = [word for word in self.test_words if word != '']
+        
 
     #end filters  
 
@@ -107,6 +120,7 @@ class ArabicTextProcessor:
         self.combine_all_text_files()
         self.read_sw_file()
         # make them a list
+        self.test_words = self.get_text_to_list(self.test_combined_content)
         self.distinct_words = self.get_text_to_list(self.combined_content)
         self.file_words = self.get_text_to_list(self.combined_content)
         self.stop_words = self.get_text_to_list(self.sw_content,"\n")
@@ -115,10 +129,20 @@ class ArabicTextProcessor:
         #functions for filters 
         self.distinct_words = self.filter_not_alpha_characters(self.distinct_words)
         self.file_words = self.filter_not_alpha_characters(self.file_words,False)
+        self.test_words = self.filter_not_alpha_characters(self.file_words,False)
         self.filter_sw()
         self.filter_void()
         #next word processing
         self.process_next_words()
+
+        with open("data_train.json","w",encoding='utf-8') as j:
+            json.dump(self.distinct_words,j,ensure_ascii=False) 
+
+        with open("data_test.json","w",encoding='utf-8') as j:
+            json.dump(self.test_words,j,ensure_ascii=False)     
+
+        print("After processing : ",len(self.distinct_words))
+
 
         # mirror the arabic words
         #self.distinct_words = {
@@ -130,9 +154,5 @@ class ArabicTextProcessor:
         #print result 
         #print("the matrixe : ",self.distinct_words)
 
-        with open("data_train.json","w",encoding='utf-8') as j:
-            json.dump(self.distinct_words,j,ensure_ascii=False) 
-
-        print("After processing : ",len(self.distinct_words))
 
 
