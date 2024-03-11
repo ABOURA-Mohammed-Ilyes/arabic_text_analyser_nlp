@@ -5,6 +5,7 @@ import os
 import json
 import qalsadi.lemmatizer 
 import re
+import ner_module
 
 # pip install qalsadi pip  install farasapy
 
@@ -90,18 +91,16 @@ def ner_word(content):
            
 
 # Supprimer les mots qui ne sont pas en arabe
-data = filter_no_arabic(data) 
-stemmed_words_unknown = stem_word(data)
-unknown_words = dict_test(stemmed_words_unknown)
-words_with_all = type_word(unknown_words)
+# data = filter_no_arabic(data) 
+# stemmed_words_unknown = stem_word(data)
+# unknown_words = dict_test(stemmed_words_unknown)
+# words_with_all = type_word(unknown_words)
 
-with open("words_with_all.json","w",encoding='utf-8') as j:
-    json.dump(words_with_all,j,ensure_ascii=False)
-
-
+# with open("words_with_all.json","w",encoding='utf-8') as j:
+#     json.dump(words_with_all,j,ensure_ascii=False)
 
    
-ner_words_unknown = ner_word(unknown_words)
+# ner_words_unknown = ner_word(unknown_words)
 # print(ner_words_unknown)
 # print(words_with_all)
 # print(len(stemmed_words_unknown))
