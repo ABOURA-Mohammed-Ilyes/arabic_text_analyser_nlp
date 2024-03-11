@@ -6,7 +6,7 @@ import json
 import qalsadi.lemmatizer 
 import re
 
-
+# pip install qalsadi pip  install farasapy
 
 json_path = os.path.join(os.path.dirname(__file__), 'data_train.json')
 with open(json_path, "r", encoding='utf-8') as j:
@@ -72,17 +72,20 @@ def type_word(content):
 
 
 
-# def ner_word(content):
-#     named_entity_recognizer_interactive = FarasaNamedEntityRecognizer(interactive=True)
-#     ner_words_unknown = []
+def ner_word(content):
+    named_entity_recognizer_interactive = FarasaNamedEntityRecognizer()
+    ner_words_unknown = []
 
-#     for word in content:
-#         print(word)
-#         ner_word = named_entity_recognizer_interactive.recognize(word)
-#         if "O" in ner_word:
-#             ner_words_unknown.append(word)
-#     named_entity_recognizer_interactive.terminate()    
-#     return ner_words_unknown
+    for word in content:
+        print(word)
+        ner_word = named_entity_recognizer_interactive.recognize(word)
+        print(ner_word)
+        if "O" in ner_word:
+            ner_words_unknown.append(word)
+    named_entity_recognizer_interactive.terminate()    
+    return ner_words_unknown
+
+
 
            
 
@@ -91,14 +94,21 @@ data = filter_no_arabic(data)
 stemmed_words_unknown = stem_word(data)
 unknown_words = dict_test(stemmed_words_unknown)
 words_with_all = type_word(unknown_words)
-# ner_words_unknown = ner_word(unknown_words)
+
+with open("words_with_all.json","w",encoding='utf-8') as j:
+    json.dump(words_with_all,j,ensure_ascii=False)
+
+
+
+   
+ner_words_unknown = ner_word(unknown_words)
 # print(ner_words_unknown)
-print(words_with_all)
-print(len(stemmed_words_unknown))
-print(len(unknown_words))
-print(len(words_with_all))
+# print(words_with_all)
+# print(len(stemmed_words_unknown))
+# print(len(unknown_words))
+# print(len(words_with_all))
 
 # print(len(ner_words_unknown))
+    
 
-with open("unknown_words.json","w",encoding='utf-8') as j:
-    json.dump(unknown_words,j,ensure_ascii=False)            
+
