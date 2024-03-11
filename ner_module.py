@@ -25,7 +25,7 @@ def chunk_data(data, size):
 
 def main():
     data = load_data()
-    chunks = chunk_data(data, len(data) // 20)  # Adjust the chunk size as necessary
+    chunks = chunk_data(data, len(data) // 10)  # Adjust the chunk size as necessary
 
     with ProcessPoolExecutor() as executor:
         results = executor.map(ner_word, chunks)
