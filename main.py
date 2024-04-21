@@ -11,12 +11,12 @@ import json
 # test = ArabicTextProcessor(folder_path, SW_Path,number_of_files)
 # test.processing()
 
-json_path = os.path.join(os.path.dirname(__file__), 'data_train.json')
-with open(json_path, "r", encoding='utf-8') as j:
-    data = json.load(j)
+# json_path = os.path.join(os.path.dirname(__file__), 'data_train.json')
+# with open(json_path, "r", encoding='utf-8') as j:
+#     data = json.load(j)
 
-interface = Interface(data)
-interface.show_interface()
+# interface = Interface(data)
+# interface.show_interface()
 
 
 # json_path_test = os.path.join(os.path.dirname(__file__), 'data_test.json')
