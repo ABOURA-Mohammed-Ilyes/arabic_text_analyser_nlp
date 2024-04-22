@@ -27,13 +27,10 @@ with open(testDataPath, "r", encoding='utf-8') as t:
 arabicTextAnalyzer = ArabicTextAnalyzer(trainingData)
 #arabicTextAnalyzer.Analyze()
 
-
-
+#go to nerv2 and run it after analyze
 
 interface = Interface(trainingData)
 # interface.show_interface()
-
-
 
 
 ev = Evaluation(trainingData, testData)
