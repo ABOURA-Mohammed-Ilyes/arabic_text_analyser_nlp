@@ -34,4 +34,4 @@ interface = Interface(trainingData)
 
 
 ev = Evaluation(trainingData, testData)
-# ev.evaluate_accuracy()
+ev.evaluate_accuracy()
