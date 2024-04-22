@@ -122,10 +122,10 @@ class ArabicTextProcessor:
         #next word processing
         self.processNextWords()
 
-        with open("V2\\dinstinctWords.json","w",encoding='utf-8') as j:
+        with open("V2\\jsons\\dinstinctWords.json","w",encoding='utf-8') as j:
             json.dump(self.distinctWords, j, ensure_ascii=False) 
 
-        with open("V2\\testWords.json","w",encoding='utf-8') as j:
+        with open("V2\\jsons\\testWords.json","w",encoding='utf-8') as j:
             json.dump(self.testWords, j, ensure_ascii=False)
 
         print("After processing : ", len(self.distinctWords), "\n###################################")
