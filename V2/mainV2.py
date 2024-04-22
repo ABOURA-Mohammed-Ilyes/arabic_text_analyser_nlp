@@ -30,7 +30,7 @@ arabicTextAnalyzer = ArabicTextAnalyzer(trainingData)
 #go to nerv2 and run it after analyze
 
 interface = Interface(trainingData)
-# interface.show_interface()
+#interface.show_interface()
 
 
 ev = Evaluation(trainingData, testData)
