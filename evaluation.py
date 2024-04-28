@@ -3,9 +3,10 @@ import random
 class Evaluation():
 
 
-    def __init__(self, data_train,data_test):
+    def __init__(self, data_train,data_test, NUMBER_OF_WORDS):
         self.distinct_words = data_train
         self.test_words = data_test
+        self.NUMBER_OF_WORDS = NUMBER_OF_WORDS
 
     def evaluate_accuracy(self):
 
@@ -15,13 +16,13 @@ class Evaluation():
         total_words = len(test_words)
         correct_predictions = 0
         last_list.append(test_words[0])
-        for i in range(len(test_words) - 1):
-            current_word = test_words[i]
-            next_word_actual = test_words[i + 1]
+        for i in range(len(test_words) - self.NUMBER_OF_WORDS):
+            currentKey = ' '.join(test_words[i:i+self.NUMBER_OF_WORDS])
+            next_word_actual = test_words[i + self.NUMBER_OF_WORDS]
 
   
-            if current_word in self.distinct_words:
-                predicted_next_words = list(self.distinct_words[current_word].keys())
+            if currentKey in self.distinct_words:
+                predicted_next_words = list(self.distinct_words[currentKey].keys())
                 random_next_word = random.choice(predicted_next_words)
                 last_list.append(random_next_word)
             else:

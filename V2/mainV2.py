@@ -8,10 +8,11 @@ from evaluation import Evaluation
 
 
 NUMBER_OF_FILES = 6000
+NUMBER_OF_WORDS = 2
 stopWordsPath = os.path.join(os.path.dirname(__file__), 'arabicStopWords.txt')
 folderPath = os.path.join(os.path.dirname(__file__), 'Sports')
-arabicTextProcessor = ArabicTextProcessor(folderPath, stopWordsPath, NUMBER_OF_FILES)
-#arabicTextProcessor.processing()
+arabicTextProcessor = ArabicTextProcessor(folderPath, stopWordsPath, NUMBER_OF_FILES, NUMBER_OF_WORDS)
+arabicTextProcessor.processing()
 
 
 trainingDataPath = os.path.join(os.path.dirname(__file__), 'jsons\\dinstinctWords.json')
@@ -33,5 +34,5 @@ interface = Interface(trainingData)
 #interface.show_interface()
 
 
-ev = Evaluation(trainingData, testData)
+ev = Evaluation(trainingData, testData, NUMBER_OF_WORDS)
 ev.evaluate_accuracy()

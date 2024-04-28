@@ -4,10 +4,11 @@ import random
 import json
 
 class ArabicTextProcessor:
-    def __init__(self, folderPath, stopWordsPath, NUMBER_OF_FILES):
+    def __init__(self, folderPath, stopWordsPath, NUMBER_OF_FILES, NUMBER_OF_WORDS = 1):
         self.folderPath = folderPath
         self.stopWordsPath = stopWordsPath
         self.NUMBER_OF_FILES = NUMBER_OF_FILES
+        self.NUMBER_OF_WORDS = NUMBER_OF_WORDS
         self.combinedContent = "" #Contient tous les fichiers text pour le training séparé avec un " "
         self.remaingContent = "" #Contient tous les fichiers text pour le test séparé avec un " "
         self.stopWordsContent = "" 
@@ -98,6 +99,27 @@ class ArabicTextProcessor:
             self.distinctWords[word] = dict(top3NextWords)
 
 
+    def evolvedProcessNextWords(self):
+        '''A function that finds next words for every group of n_common distinct words'''
+        words = self.fileWords
+        for i in range(len(words) - self.NUMBER_OF_WORDS):
+            currentKey = ' '.join(words[i:i+self.NUMBER_OF_WORDS])
+            nextWord = words[i + self.NUMBER_OF_WORDS]
+            if currentKey not in self.distinctWords:
+                self.distinctWords[currentKey] = {}
+
+            if nextWord in self.distinctWords[currentKey]:
+                self.distinctWords[currentKey][nextWord] += 1
+            else:
+                self.distinctWords[currentKey][nextWord] = 1
+
+        # Keeping only top 3 most frequent next words for each key
+        for key, nextWords in self.distinctWords.items():
+            sortedNextWords = sorted(nextWords.items(), key=lambda x: x[1], reverse=True)
+            topNextWords = sortedNextWords[:3]  # You can adjust the number of top words as needed
+            self.distinctWords[key] = dict(topNextWords)
+
+
     def processing(self):
         '''function that process our model'''
         
@@ -106,21 +128,21 @@ class ArabicTextProcessor:
         self.readStopWordsFile()
         
         # make them a list
-        self.distinctWords = self.getTextToList(self.combinedContent)
+        # self.distinctWords = self.getTextToList(self.combinedContent)
         self.testWords = self.getTextToList(self.remaingContent)
         self.fileWords = self.getTextToList(self.combinedContent)
         self.stopWords = self.getTextToList(self.stopWordsContent,"\n")
         
-        print("###################################\nBefore processing : ", len(self.distinctWords), "\n###################################")
+        print("###################################\nBefore processing : ", len(self.fileWords), "\n###################################")
 
         #functions for filters 
-        self.distinctWords = self.filterNotAlphaCharacters(self.distinctWords)
+        # self.distinctWords = self.filterNotAlphaCharacters(self.distinctWords)
         self.fileWords = self.filterNotAlphaCharacters(self.fileWords, False)
         self.testWords = self.filterNotAlphaCharacters(self.testWords, False)
         self.filterStopWordsAndVoid()
 
         #next word processing
-        self.processNextWords()
+        self.evolvedProcessNextWords()
 
         with open("V2\\jsons\\dinstinctWords.json","w",encoding='utf-8') as j:
             json.dump(self.distinctWords, j, ensure_ascii=False) 
