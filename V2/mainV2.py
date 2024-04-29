@@ -1,6 +1,7 @@
 
 import os
 import json
+from CountNextWords import CountNextWords
 from generateArabicWordV2 import ArabicTextProcessor
 from ArabicTextAnalyzer import ArabicTextAnalyzer
 from interface import Interface
@@ -8,16 +9,16 @@ from evaluation import Evaluation
 
 
 NUMBER_OF_FILES = 6000
-NUMBER_OF_WORDS = 2
+NUMBER_OF_WORDS = 1
 stopWordsPath = os.path.join(os.path.dirname(__file__), 'arabicStopWords.txt')
 folderPath = os.path.join(os.path.dirname(__file__), 'Sports')
-arabicTextProcessor = ArabicTextProcessor(folderPath, stopWordsPath, NUMBER_OF_FILES, NUMBER_OF_WORDS)
-arabicTextProcessor.processing()
+arabicTextProcessor = ArabicTextProcessor(folderPath, stopWordsPath, NUMBER_OF_FILES)
+# arabicTextProcessor.processing()
 
 
-trainingDataPath = os.path.join(os.path.dirname(__file__), 'jsons\\dinstinctWords.json')
-with open(trainingDataPath, "r", encoding='utf-8') as j:
-    trainingData = json.load(j)
+distinctWordsPath = os.path.join(os.path.dirname(__file__), 'jsons\\dinstinctWords.json')
+with open(distinctWordsPath, "r", encoding='utf-8') as j:
+    distinctWords = json.load(j)
 
 
 testDataPath = os.path.join(os.path.dirname(__file__), 'jsons\\testWords.json')
@@ -25,14 +26,25 @@ with open(testDataPath, "r", encoding='utf-8') as t:
     testData = json.load(t)
 
 
-arabicTextAnalyzer = ArabicTextAnalyzer(trainingData)
-#arabicTextAnalyzer.Analyze()
+arabicTextAnalyzer = ArabicTextAnalyzer(distinctWords)
+# arabicTextAnalyzer.Analyze()
 
 #go to nerv2 and run it after analyze
 
-interface = Interface(trainingData)
+unknownWordData = os.path.join(os.path.dirname(__file__), 'jsons\\unknownWords.json')
+with open(unknownWordData, "r", encoding='utf-8') as t:
+    unknownWordData = json.load(t)
+
+countnextWords = CountNextWords(distinctWords, unknownWordData)
+countnextWords.evolvedProcessNextWords(NUMBER_OF_WORDS)
+
+trainingData = os.path.join(os.path.dirname(__file__), 'jsons\\WordsCount_1.json')
+with open(trainingData, "r", encoding='utf-8') as t:
+    trainingData = json.load(t)
+
+# interface = Interface(trainingData)
 #interface.show_interface()
 
 
-ev = Evaluation(trainingData, testData, NUMBER_OF_WORDS)
-ev.evaluate_accuracy()
+# ev = Evaluation(trainingData, testData, NUMBER_OF_WORDS)
+# ev.evaluate_accuracy()

@@ -34,8 +34,11 @@ def main():
     for result in results:
         unkownWordsAfterNer.extend(result)
 
+    unkownWordsAfterNer = [word.replace('/', '') for word in unkownWordsAfterNer]
+    unkownWordsAfterNer = [word.replace('O', '') for word in unkownWordsAfterNer]
+    
     # Here you can do something with ner_words_unknown
-    with open("V2\\jsons\\unkownWordsAfterNer.json","w",encoding='utf-8') as j:
+    with open("V2\\jsons\\unknownWords.json","w",encoding='utf-8') as j:
         json.dump(unkownWordsAfterNer, j, ensure_ascii=False)
 
 if __name__ == "__main__":
