@@ -128,14 +128,14 @@ class ArabicTextProcessor:
         # make them a list
         self.distinctWords = self.getTextToList(self.combinedContent)
         self.testWords = self.getTextToList(self.remaingContent)
-        # self.fileWords = self.getTextToList(self.combinedContent)
+        self.fileWords = self.getTextToList(self.combinedContent)
         self.stopWords = self.getTextToList(self.stopWordsContent,"\n")
         
         print("###################################\nBefore processing : ", len(self.distinctWords), "\n###################################")
 
         #functions for filters 
         self.distinctWords = self.filterNotAlphaCharacters(self.distinctWords)
-        # self.fileWords = self.filterNotAlphaCharacters(self.fileWords, False)
+        self.fileWords = self.filterNotAlphaCharacters(self.fileWords, False)
         self.testWords = self.filterNotAlphaCharacters(self.testWords, False)
         self.filterStopWordsAndVoid()
 
@@ -144,6 +144,9 @@ class ArabicTextProcessor:
 
         with open("V2\\jsons\\dinstinctWords.json","w",encoding='utf-8') as j:
             json.dump(self.distinctWords, j, ensure_ascii=False) 
+
+        with open("V2\\jsons\\AllWords.json","w",encoding='utf-8') as j:
+            json.dump(self.fileWords, j, ensure_ascii=False) 
 
         with open("V2\\jsons\\testWords.json","w",encoding='utf-8') as j:
             json.dump(self.testWords, j, ensure_ascii=False)
