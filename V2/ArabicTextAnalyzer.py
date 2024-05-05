@@ -19,8 +19,6 @@ class ArabicTextAnalyzer:
         return arabicWord
 
 
-#pourquoi ajouter que ceux qui sont equivalent
-#pourquoi ajouter ceux qui sont equivalent dans unknown words 
     def stemFilter(self, data):
         stemmerInteractive = FarasaStemmer(interactive=True)
         unknownWords = []
