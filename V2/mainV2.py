@@ -2,18 +2,19 @@
 import os
 import json
 from CountNextWords import CountNextWords
+from CountNextWordsV2 import CountNextWordsV2
 from generateArabicWordV2 import ArabicTextProcessor
 from ArabicTextAnalyzer import ArabicTextAnalyzer
 from interface import Interface
-from evaluation import Evaluation
+from evaluationV2 import Evaluation
 
 
 NUMBER_OF_FILES = 6000
-NUMBER_OF_WORDS = 1
+NUMBER_OF_WORDS = 2
 stopWordsPath = os.path.join(os.path.dirname(__file__), 'arabicStopWords.txt')
 folderPath = os.path.join(os.path.dirname(__file__), 'Sports')
 arabicTextProcessor = ArabicTextProcessor(folderPath, stopWordsPath, NUMBER_OF_FILES)
-# arabicTextProcessor.processing()
+arabicTextProcessor.processing()
 
 
 distinctWordsPath = os.path.join(os.path.dirname(__file__), 'jsons\\dinstinctWords.json')
@@ -40,7 +41,10 @@ with open(allWordsData, "r", encoding='utf-8') as t:
     allWordsData = json.load(t)
 
 countnextWords = CountNextWords(allWordsData, unknownWordData)
-countnextWords.evolvedProcessNextWords(NUMBER_OF_WORDS)
+# countnextWords.evolvedProcessNextWords(NUMBER_OF_WORDS)
+
+countnextWordsV2 = CountNextWordsV2(allWordsData, unknownWordData)
+countnextWordsV2.evolvedProcessNextWords(NUMBER_OF_WORDS)
 
 filePath = f"jsons\\wordsCount_{NUMBER_OF_WORDS}.json"
 
@@ -52,5 +56,5 @@ with open(trainingData, "r", encoding='utf-8') as t:
 # interface.show_interface()
 
 
-ev = Evaluation(trainingData, testData, NUMBER_OF_WORDS)
-ev.evaluate_accuracy()
+# ev = Evaluation(trainingData, testData, NUMBER_OF_WORDS)
+# ev.evaluate_accuracy()

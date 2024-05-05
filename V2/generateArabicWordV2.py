@@ -16,7 +16,8 @@ class ArabicTextProcessor:
         self.testWords = [] #Contient une liste de tous les mots pour faire le test
         self.fileWords = [] #Une copie du tableau distinctWords en tableau au lieu d'une liste
         self.stopWords = []
-        
+
+
 
     def combineAllTextFiles(self):
         '''a function that will combine all files randomly'''
@@ -38,6 +39,7 @@ class ArabicTextProcessor:
                 self.remaingContent += content + " "
 
 
+
     def readStopWordsFile(self):
         try:
             with open(self.stopWordsPath, 'r', encoding='utf-8') as file:
@@ -48,13 +50,16 @@ class ArabicTextProcessor:
             print("An error occurred: ", e)
 
 
+
     def getTextToList(self, content, separation = " "):
         '''a function for splitting files to list'''
         return content.split(separation)
 
 
-    def getTextToListV2(self, content, separators=" ,.\n"):
-        return re.split(f"[{re.escape(separators)}]", content)
+
+    def getTextToListV2(self, content):
+        return re.findall(r'\w+|[.,]', content)
+
 
 
     def filterNotAlphaCharacters(self, content, dictionnary=True):
@@ -74,23 +79,8 @@ class ArabicTextProcessor:
                 filteredWords.append(filteredWord)
 
         return filteredWords
-    
-    def filterNotAlphaCharactersV2(self, content, dictionnary=True):
-        if dictionnary:
-            filteredWords = {}
-        else:
-            filteredWords = []
 
-        for word in content:
-            # Keep only alphabetic characters, periods, and commas
-            filteredWord = ''.join([char for char in word if (char.isalpha() and char!= '_') or char in {'.', ','}])
-            if dictionnary:
-                filteredWords[filteredWord] = {}
-            else:
-                filteredWords.append(filteredWord)
 
-        return filteredWords
-    
 
     def filterStopWordsAndVoid(self):
         '''a function delete stop words'''
@@ -101,14 +91,16 @@ class ArabicTextProcessor:
         self.testWords = [word for word in self.testWords if word not in self.stopWords]
         self.testWords = [word for word in self.testWords if word != '']
 
+
+
     def filterStopWordsAndVoidV2(self):
         '''a function delete stop words'''
         temp_stopWords = [word for word in self.stopWords if word not in {'.', ','}]
-        self.distinctWords = {word: {} for word in self.distinctWords if word not in temp_stopWords}
+        self.distinctWords = {word: {} for word in self.distinctWords if word not in self.stopWords}
         self.distinctWords = {word: {} for word in self.distinctWords if word != ''}
         self.fileWords = [word for word in self.fileWords if word not in temp_stopWords]
         self.fileWords = [word for word in self.fileWords if word != '']
-        self.testWords = [word for word in self.testWords if word not in temp_stopWords]
+        self.testWords = [word for word in self.testWords if word not in self.stopWords]
         self.testWords = [word for word in self.testWords if word != '']
 
 
@@ -130,6 +122,7 @@ class ArabicTextProcessor:
             self.distinctWords[word] = dict(top3NextWords)
 
 
+
     def processing(self):
         '''function that process our model'''
         
@@ -143,10 +136,10 @@ class ArabicTextProcessor:
         # self.fileWords = self.getTextToList(self.combinedContent)
         # self.stopWords = self.getTextToList(self.stopWordsContent,"\n")
 
-        self.distinctWords = self.getTextToListV2(self.combinedContent)
-        self.testWords = self.getTextToListV2(self.remaingContent)
+        self.distinctWords = self.getTextToList(self.combinedContent)
+        self.testWords = self.getTextToList(self.remaingContent)
         self.fileWords = self.getTextToListV2(self.combinedContent)
-        self.stopWords = self.getTextToListV2(self.stopWordsContent)
+        self.stopWords = self.getTextToList(self.stopWordsContent,"\n")
         
         print("###################################\nBefore processing : ", len(self.distinctWords), "\n###################################")
 
@@ -155,21 +148,20 @@ class ArabicTextProcessor:
         # self.fileWords = self.filterNotAlphaCharacters(self.fileWords, False)
         # self.testWords = self.filterNotAlphaCharacters(self.testWords, False)
 
-        self.distinctWords = self.filterNotAlphaCharactersV2(self.distinctWords)
-        self.fileWords = self.filterNotAlphaCharactersV2(self.fileWords, False)
-        self.testWords = self.filterNotAlphaCharactersV2(self.testWords, False)
+        self.distinctWords = self.filterNotAlphaCharacters(self.distinctWords)
+        self.testWords = self.filterNotAlphaCharacters(self.testWords, False)
 
         # self.filterStopWordsAndVoid()
 
-        self.filterNotAlphaCharactersV2()
+        self.filterStopWordsAndVoidV2()
 
-        with open("V2\\jsons\\dinstinctWords.json","w",encoding='utf-8') as j:
+        with open("jsons\\dinstinctWords.json","w",encoding='utf-8') as j:
             json.dump(self.distinctWords, j, ensure_ascii=False) 
 
-        with open("V2\\jsons\\AllWords.json","w",encoding='utf-8') as j:
+        with open("jsons\\AllWords.json","w",encoding='utf-8') as j:
             json.dump(self.fileWords, j, ensure_ascii=False) 
 
-        with open("V2\\jsons\\testWords.json","w",encoding='utf-8') as j:
+        with open("jsons\\testWords.json","w",encoding='utf-8') as j:
             json.dump(self.testWords, j, ensure_ascii=False)
 
         print("After processing : ", len(self.distinctWords), "\n###################################")
